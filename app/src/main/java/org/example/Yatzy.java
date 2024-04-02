@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.Arrays;
+
 public class Yatzy {
 
   protected int[] dices;
@@ -37,24 +39,7 @@ public class Yatzy {
   }
 
   public int ones() {
-    int sum = 0;
-    if (dices[0] == 1) {
-      sum++;
-    }
-    if (dices[1] == 1) {
-      sum++;
-    }
-    if (dices[2] == 1) {
-      sum++;
-    }
-    if (dices[3] == 1) {
-      sum++;
-    }
-    if (dices[4] == 1) {
-      sum++;
-    }
-
-    return sum;
+    return Arrays.stream(dices).filter(dice -> dice == 1).sum();
   }
 
   public int twos() {
