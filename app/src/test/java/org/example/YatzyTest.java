@@ -1,6 +1,7 @@
 package org.example;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.example.Dice.FIVE;
 import static org.example.Dice.FOUR;
 import static org.example.Dice.ONE;
@@ -115,4 +116,8 @@ class YatzyTest {
     assertThat(new Yatzy(SIX, SIX, SIX, SIX, SIX).fullHouse()).isEqualTo(0);
   }
 
+  @Test
+  void should_yatzy_constructor_failed_if_one_dice_is_null() {
+    assertThatThrownBy(() -> new Yatzy(null, TWO, TWO, FOUR, FIVE)).isInstanceOf(NullPointerException.class);
+  }
 }
