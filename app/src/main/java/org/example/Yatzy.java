@@ -18,19 +18,14 @@ import java.util.stream.Collectors;
 
 public class Yatzy {
 
-  private final Dice[] dices;
+  private final List<Dice> dices;
 
   public Yatzy(Dice d1, Dice d2, Dice d3, Dice d4, Dice d5) {
-    dices = new Dice[5];
-    dices[0] = d1;
-    dices[1] = d2;
-    dices[2] = d3;
-    dices[3] = d4;
-    dices[4] = d5;
+    dices = List.of(d1, d2, d3, d4, d5);
   }
 
   public int chance() {
-    return stream(dices).mapToInt(Dice::value).sum();
+    return dices.stream().mapToInt(Dice::value).sum();
   }
 
   public int yatzy() {
@@ -43,7 +38,7 @@ public class Yatzy {
   }
 
   private int sumDiceWithExpectedValue(Dice diceExpected) {
-    return stream(dices).filter(dice -> dice == diceExpected).mapToInt(Dice::value).sum();
+    return dices.stream().filter(dice -> dice == diceExpected).mapToInt(Dice::value).sum();
   }
 
   public int twos() {
@@ -119,7 +114,7 @@ public class Yatzy {
     HashMap<Dice, Integer> occurrencePerDice = new HashMap<>();
 
     EnumSet.allOf(Dice.class).forEach((v -> occurrencePerDice.put(v, 0)));
-    stream(dices).forEach(dice -> occurrencePerDice.merge(dice, 1, Integer::sum));
+    dices.forEach(dice -> occurrencePerDice.merge(dice, 1, Integer::sum));
 
     return occurrencePerDice;
   }
@@ -146,7 +141,7 @@ public class Yatzy {
     if (pairs.isEmpty() || threeOfAKind.isEmpty()) {
       return 0;
     } else {
-      return stream(dices).mapToInt(Dice::value).sum();
+      return dices.stream().mapToInt(Dice::value).sum();
     }
   }
 
