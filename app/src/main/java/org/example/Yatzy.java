@@ -16,13 +16,7 @@ public class Yatzy {
   }
 
   public int chance() {
-    int total = 0;
-    total += dices[0];
-    total += dices[1];
-    total += dices[2];
-    total += dices[3];
-    total += dices[4];
-    return total;
+    return Arrays.stream(dices).sum();
   }
 
   public int yatzy() {
