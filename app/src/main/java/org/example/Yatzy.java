@@ -39,80 +39,32 @@ public class Yatzy {
   }
 
   public int ones() {
-    return Arrays.stream(dices).filter(dice -> dice == 1).sum();
+    return sumDiceWithExpectedValue(1);
+  }
+
+  private int sumDiceWithExpectedValue(int diceExpected) {
+    return Arrays.stream(dices).filter(dice -> dice == diceExpected).sum();
   }
 
   public int twos() {
-    int sum = 0;
-    if (dices[0] == 2) {
-      sum += 2;
-    }
-    if (dices[1] == 2) {
-      sum += 2;
-    }
-    if (dices[2] == 2) {
-      sum += 2;
-    }
-    if (dices[3] == 2) {
-      sum += 2;
-    }
-    if (dices[4] == 2) {
-      sum += 2;
-    }
-    return sum;
+
+    return sumDiceWithExpectedValue(2);
   }
 
   public int threes() {
-    int s;
-    s = 0;
-    if (dices[0] == 3) {
-      s += 3;
-    }
-    if (dices[1] == 3) {
-      s += 3;
-    }
-    if (dices[2] == 3) {
-      s += 3;
-    }
-    if (dices[3] == 3) {
-      s += 3;
-    }
-    if (dices[4] == 3) {
-      s += 3;
-    }
-    return s;
+    return sumDiceWithExpectedValue(3);
   }
 
   public int fours() {
-    int sum;
-    sum = 0;
-    for (int at = 0; at != 5; at++) {
-      if (dices[at] == 4) {
-        sum += 4;
-      }
-    }
-    return sum;
+    return sumDiceWithExpectedValue(4);
   }
 
   public int fives() {
-    int s = 0;
-    int i;
-    for (i = 0; i < dices.length; i++) {
-      if (dices[i] == 5) {
-        s = s + 5;
-      }
-    }
-    return s;
+    return sumDiceWithExpectedValue(5);
   }
 
   public int sixes() {
-    int sum = 0;
-    for (int at = 0; at < dices.length; at++) {
-      if (dices[at] == 6) {
-        sum = sum + 6;
-      }
-    }
-    return sum;
+    return sumDiceWithExpectedValue(6);
   }
 
   public int score_pair() {
