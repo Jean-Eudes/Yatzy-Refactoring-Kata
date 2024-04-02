@@ -59,15 +59,18 @@ public class Yatzy {
   public int score_pair() {
     int numberOfDice = 2;
     List<Dice> pairs = diceWithAtLeastTheSameValue(numberOfDice);
+
+    // On choisit la plus grande paire si il y a plusieurs paires.
     return pairs.stream().max(Comparator.naturalOrder()).map(dice -> numberOfDice * dice.value()).orElse(0);
   }
 
   public int two_pair() {
-    List<Dice> pairs = diceWithAtLeastTheSameValue(2);
-    if (pairs.size() != 2) {
-      return 0;
+    int numberOfDice = 2;
+    List<Dice> pairs = diceWithAtLeastTheSameValue(numberOfDice);
+    if (pairs.size() == 2) {
+      return pairs.stream().mapToInt(dice -> numberOfDice * dice.value()).sum();
     } else {
-      return pairs.stream().mapToInt(dice -> 2 * dice.value()).sum();
+      return 0;
     }
   }
 
@@ -115,6 +118,7 @@ public class Yatzy {
     List<Dice> pairs = diceWithAtLeastTheSameValue(2);
     List<Dice> threeOfAKind = diceWithAtLeastTheSameValue(3);
 
+    // on supprime de la liste des paires les brelans.
     pairs.removeAll(threeOfAKind);
     if (pairs.isEmpty() || threeOfAKind.isEmpty()) {
       return 0;
