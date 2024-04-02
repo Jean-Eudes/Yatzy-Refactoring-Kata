@@ -1,6 +1,12 @@
 package org.example;
 
+import static java.util.Arrays.stream;
+import static java.util.stream.IntStream.rangeClosed;
+
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.IntStream;
 
 public class Yatzy {
 
@@ -16,7 +22,7 @@ public class Yatzy {
   }
 
   public int chance() {
-    return Arrays.stream(dices).sum();
+    return stream(dices).sum();
   }
 
   public int yatzy() {
@@ -37,7 +43,7 @@ public class Yatzy {
   }
 
   private int sumDiceWithExpectedValue(int diceExpected) {
-    return Arrays.stream(dices).filter(dice -> dice == diceExpected).sum();
+    return stream(dices).filter(dice -> dice == diceExpected).sum();
   }
 
   public int twos() {
@@ -62,10 +68,10 @@ public class Yatzy {
   }
 
   public int score_pair() {
-    int[] counts = countNumberOfDicePerValue();
+    Map<Integer, Integer> counts = countNumberOfDicePerValue();
     int at;
     for (at = 0; at != 6; at++) {
-      if (counts[6 - at - 1] >= 2) {
+      if (counts.get(6 - at) >= 2) {
         return (6 - at) * 2;
       }
     }
@@ -73,11 +79,11 @@ public class Yatzy {
   }
 
   public int two_pair() {
-    int[] counts = countNumberOfDicePerValue();
+    Map<Integer, Integer> counts = countNumberOfDicePerValue();
     int n = 0;
     int score = 0;
     for (int i = 0; i < 6; i += 1) {
-      if (counts[6 - i - 1] >= 2) {
+      if (counts.get(6 - i) >= 2) {
         n++;
         score += (6 - i);
       }
@@ -90,9 +96,9 @@ public class Yatzy {
   }
 
   public int four_of_a_kind() {
-    int[] tallies = countNumberOfDicePerValue();
+    Map<Integer, Integer> tallies = countNumberOfDicePerValue();
     for (int i = 0; i < 6; i++) {
-      if (tallies[i] >= 4) {
+      if (tallies.get(i + 1) >= 4) {
         return (i + 1) * 4;
       }
     }
@@ -100,9 +106,9 @@ public class Yatzy {
   }
 
   public int three_of_a_kind() {
-    int[] t = countNumberOfDicePerValue();
+    Map<Integer, Integer> t = countNumberOfDicePerValue();
     for (int i = 0; i < 6; i++) {
-      if (t[i] >= 3) {
+      if (t.get(i + 1) >= 3) {
         return (i + 1) * 3;
       }
     }
@@ -111,37 +117,36 @@ public class Yatzy {
 
   public int smallStraight() {
 
-    int[] tallies = countNumberOfDicePerValue();
+    Map<Integer, Integer> tallies = countNumberOfDicePerValue();
 
-    if (tallies[0] == 1 &&
-        tallies[1] == 1 &&
-        tallies[2] == 1 &&
-        tallies[3] == 1 &&
-        tallies[4] == 1) {
+    if (tallies.get(1) == 1 &&
+        tallies.get(2) == 1 &&
+        tallies.get(3) == 1 &&
+        tallies.get(4) == 1 &&
+        tallies.get(5) == 1) {
       return 15;
     }
     return 0;
   }
 
-  private int[] countNumberOfDicePerValue() {
-    int[] tallies = new int[6];
-    tallies[dices[0] - 1] += 1;
-    tallies[dices[1] - 1] += 1;
-    tallies[dices[2] - 1] += 1;
-    tallies[dices[3] - 1] += 1;
-    tallies[dices[4] - 1] += 1;
-    return tallies;
+  private Map<Integer, Integer> countNumberOfDicePerValue() {
+    HashMap<Integer, Integer> occurrencePerDice = new HashMap<>();
+
+    rangeClosed(1, 6).forEach((v -> occurrencePerDice.put(v, 0)));
+    stream(dices).forEach(dice -> occurrencePerDice.merge(dice, 1, Integer::sum));
+
+    return occurrencePerDice;
   }
 
   public int largeStraight() {
 
-    int[] tallies = countNumberOfDicePerValue();
+    Map<Integer, Integer> tallies = countNumberOfDicePerValue();
 
-    if (tallies[1] == 1 &&
-        tallies[2] == 1 &&
-        tallies[3] == 1 &&
-        tallies[4] == 1
-        && tallies[5] == 1) {
+    if (tallies.get(2) == 1 &&
+        tallies.get(3) == 1 &&
+        tallies.get(4) == 1 &&
+        tallies.get(5) == 1
+        && tallies.get(6) == 1) {
       return 20;
     }
     return 0;
@@ -154,17 +159,17 @@ public class Yatzy {
     boolean _3 = false;
     int _3_at = 0;
 
-    int[] tallies = countNumberOfDicePerValue();
+    Map<Integer, Integer> tallies = countNumberOfDicePerValue();
 
     for (i = 0; i != 6; i += 1) {
-      if (tallies[i] == 2) {
+      if (tallies.get(i + 1) == 2) {
         _2 = true;
         _2_at = i + 1;
       }
     }
 
     for (i = 0; i != 6; i += 1) {
-      if (tallies[i] == 3) {
+      if (tallies.get(i + 1) == 3) {
         _3 = true;
         _3_at = i + 1;
       }
