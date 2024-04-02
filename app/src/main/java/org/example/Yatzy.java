@@ -62,12 +62,7 @@ public class Yatzy {
   }
 
   public int score_pair() {
-    int[] counts = new int[6];
-    counts[dices[0] - 1]++;
-    counts[dices[1] - 1]++;
-    counts[dices[2] - 1]++;
-    counts[dices[3] - 1]++;
-    counts[dices[4] - 1]++;
+    int[] counts = countNumberOfDicePerValue();
     int at;
     for (at = 0; at != 6; at++) {
       if (counts[6 - at - 1] >= 2) {
@@ -78,12 +73,7 @@ public class Yatzy {
   }
 
   public int two_pair() {
-    int[] counts = new int[6];
-    counts[dices[0] - 1]++;
-    counts[dices[1] - 1]++;
-    counts[dices[2] - 1]++;
-    counts[dices[3] - 1]++;
-    counts[dices[4] - 1]++;
+    int[] counts = countNumberOfDicePerValue();
     int n = 0;
     int score = 0;
     for (int i = 0; i < 6; i += 1) {
@@ -100,13 +90,7 @@ public class Yatzy {
   }
 
   public int four_of_a_kind() {
-    int[] tallies;
-    tallies = new int[6];
-    tallies[dices[0] - 1]++;
-    tallies[dices[1] - 1]++;
-    tallies[dices[2] - 1]++;
-    tallies[dices[3] - 1]++;
-    tallies[dices[4] - 1]++;
+    int[] tallies = countNumberOfDicePerValue();
     for (int i = 0; i < 6; i++) {
       if (tallies[i] >= 4) {
         return (i + 1) * 4;
@@ -116,13 +100,7 @@ public class Yatzy {
   }
 
   public int three_of_a_kind() {
-    int[] t;
-    t = new int[6];
-    t[dices[0] - 1]++;
-    t[dices[1] - 1]++;
-    t[dices[2] - 1]++;
-    t[dices[3] - 1]++;
-    t[dices[4] - 1]++;
+    int[] t = countNumberOfDicePerValue();
     for (int i = 0; i < 6; i++) {
       if (t[i] >= 3) {
         return (i + 1) * 3;
@@ -132,13 +110,9 @@ public class Yatzy {
   }
 
   public int smallStraight() {
-    int[] tallies;
-    tallies = new int[6];
-    tallies[dices[0] - 1] += 1;
-    tallies[dices[1] - 1] += 1;
-    tallies[dices[2] - 1] += 1;
-    tallies[dices[3] - 1] += 1;
-    tallies[dices[4] - 1] += 1;
+
+    int[] tallies = countNumberOfDicePerValue();
+
     if (tallies[0] == 1 &&
         tallies[1] == 1 &&
         tallies[2] == 1 &&
@@ -149,14 +123,20 @@ public class Yatzy {
     return 0;
   }
 
-  public int largeStraight() {
-    int[] tallies;
-    tallies = new int[6];
+  private int[] countNumberOfDicePerValue() {
+    int[] tallies = new int[6];
     tallies[dices[0] - 1] += 1;
     tallies[dices[1] - 1] += 1;
     tallies[dices[2] - 1] += 1;
     tallies[dices[3] - 1] += 1;
     tallies[dices[4] - 1] += 1;
+    return tallies;
+  }
+
+  public int largeStraight() {
+
+    int[] tallies = countNumberOfDicePerValue();
+
     if (tallies[1] == 1 &&
         tallies[2] == 1 &&
         tallies[3] == 1 &&
@@ -168,19 +148,13 @@ public class Yatzy {
   }
 
   public int fullHouse() {
-    int[] tallies;
     boolean _2 = false;
     int i;
     int _2_at = 0;
     boolean _3 = false;
     int _3_at = 0;
 
-    tallies = new int[6];
-    tallies[dices[0] - 1] += 1;
-    tallies[dices[1] - 1] += 1;
-    tallies[dices[2] - 1] += 1;
-    tallies[dices[3] - 1] += 1;
-    tallies[dices[4] - 1] += 1;
+    int[] tallies = countNumberOfDicePerValue();
 
     for (i = 0; i != 6; i += 1) {
       if (tallies[i] == 2) {
