@@ -4,15 +4,15 @@ import java.util.Arrays;
 
 public class Yatzy {
 
-  protected int[] dices;
+  private final int[] dices;
 
-  public Yatzy(int d1, int d2, int d3, int d4, int _5) {
+  public Yatzy(int d1, int d2, int d3, int d4, int d5) {
     dices = new int[5];
     dices[0] = d1;
     dices[1] = d2;
     dices[2] = d3;
     dices[3] = d4;
-    dices[4] = _5;
+    dices[4] = d5;
   }
 
   public int chance() {
