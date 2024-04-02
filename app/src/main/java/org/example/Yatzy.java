@@ -145,7 +145,8 @@ public class Yatzy {
     List<Integer> pairs = diceWithAtLeastTheSameValue(2);
     List<Integer> threeOfAKind = diceWithAtLeastTheSameValue(3);
 
-    if (pairs.isEmpty() && threeOfAKind.isEmpty()) {
+    pairs.removeAll(threeOfAKind);
+    if (pairs.isEmpty() || threeOfAKind.isEmpty()) {
       return 0;
     } else {
       return stream(dices).sum();
