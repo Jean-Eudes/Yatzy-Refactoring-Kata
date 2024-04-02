@@ -1,6 +1,5 @@
 package org.example;
 
-import static java.util.Arrays.stream;
 import static org.example.Dice.FIVE;
 import static org.example.Dice.FOUR;
 import static org.example.Dice.ONE;
@@ -35,10 +34,6 @@ public class Yatzy {
 
   public int ones() {
     return sumDiceWithExpectedValue(ONE);
-  }
-
-  private int sumDiceWithExpectedValue(Dice diceExpected) {
-    return dices.stream().filter(dice -> dice == diceExpected).mapToInt(Dice::value).sum();
   }
 
   public int twos() {
@@ -88,14 +83,6 @@ public class Yatzy {
     return threeOfAKind.stream().findFirst().map(dice -> numberOfDice * dice.value()).orElse(0);
   }
 
-  private List<Dice> diceWithAtLeastTheSameValue(int numberOfDice) {
-    Map<Dice, Integer> tallies = countNumberOfDicePerValue();
-
-    return tallies.entrySet().stream().filter(
-        entry -> entry.getValue() >= numberOfDice
-    ).map(Entry::getKey).collect(Collectors.toList());
-  }
-
   public int smallStraight() {
 
     Map<Dice, Integer> tallies = countNumberOfDicePerValue();
@@ -108,15 +95,6 @@ public class Yatzy {
       return 15;
     }
     return 0;
-  }
-
-  private Map<Dice, Integer> countNumberOfDicePerValue() {
-    HashMap<Dice, Integer> occurrencePerDice = new HashMap<>();
-
-    EnumSet.allOf(Dice.class).forEach((v -> occurrencePerDice.put(v, 0)));
-    dices.forEach(dice -> occurrencePerDice.merge(dice, 1, Integer::sum));
-
-    return occurrencePerDice;
   }
 
   public int largeStraight() {
@@ -143,6 +121,27 @@ public class Yatzy {
     } else {
       return dices.stream().mapToInt(Dice::value).sum();
     }
+  }
+
+  private int sumDiceWithExpectedValue(Dice diceExpected) {
+    return dices.stream().filter(dice -> dice == diceExpected).mapToInt(Dice::value).sum();
+  }
+
+  private Map<Dice, Integer> countNumberOfDicePerValue() {
+    HashMap<Dice, Integer> occurrencePerDice = new HashMap<>();
+
+    EnumSet.allOf(Dice.class).forEach((v -> occurrencePerDice.put(v, 0)));
+    dices.forEach(dice -> occurrencePerDice.merge(dice, 1, Integer::sum));
+
+    return occurrencePerDice;
+  }
+
+  private List<Dice> diceWithAtLeastTheSameValue(int numberOfDice) {
+    Map<Dice, Integer> tallies = countNumberOfDicePerValue();
+
+    return tallies.entrySet().stream().filter(
+        entry -> entry.getValue() >= numberOfDice
+    ).map(Entry::getKey).collect(Collectors.toList());
   }
 
 }
