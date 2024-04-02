@@ -110,6 +110,7 @@ class YatzyTest {
   public void fullHouse() {
     assertEquals(18, new Yatzy(6, 2, 2, 2, 6).fullHouse());
     assertEquals(0, new Yatzy(2, 3, 4, 5, 6).fullHouse());
+    assertEquals(0, new Yatzy(6, 6, 6, 6, 6).fullHouse());
   }
 
 }

@@ -142,32 +142,13 @@ public class Yatzy {
   }
 
   public int fullHouse() {
-    boolean _2 = false;
-    int i;
-    int _2_at = 0;
-    boolean _3 = false;
-    int _3_at = 0;
+    List<Integer> pairs = diceWithAtLeastTheSameValue(2);
+    List<Integer> threeOfAKind = diceWithAtLeastTheSameValue(3);
 
-    Map<Integer, Integer> tallies = countNumberOfDicePerValue();
-
-    for (i = 0; i != 6; i += 1) {
-      if (tallies.get(i + 1) == 2) {
-        _2 = true;
-        _2_at = i + 1;
-      }
-    }
-
-    for (i = 0; i != 6; i += 1) {
-      if (tallies.get(i + 1) == 3) {
-        _3 = true;
-        _3_at = i + 1;
-      }
-    }
-
-    if (_2 && _3) {
-      return _2_at * 2 + _3_at * 3;
-    } else {
+    if (pairs.isEmpty() && threeOfAKind.isEmpty()) {
       return 0;
+    } else {
+      return stream(dices).sum();
     }
   }
 
