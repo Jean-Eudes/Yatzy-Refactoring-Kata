@@ -2,8 +2,15 @@ package org.example;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.IntStream.rangeClosed;
+import static org.example.Dice.FIVE;
+import static org.example.Dice.FOUR;
+import static org.example.Dice.ONE;
+import static org.example.Dice.SIX;
+import static org.example.Dice.THREE;
+import static org.example.Dice.TWO;
 
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +19,10 @@ import java.util.stream.Collectors;
 
 public class Yatzy {
 
-  private final int[] dices;
+  private final Dice[] dices;
 
-  public Yatzy(int d1, int d2, int d3, int d4, int d5) {
-    dices = new int[5];
+  public Yatzy(Dice d1, Dice d2, Dice d3, Dice d4, Dice d5) {
+    dices = new Dice[5];
     dices[0] = d1;
     dices[1] = d2;
     dices[2] = d3;
@@ -24,71 +31,71 @@ public class Yatzy {
   }
 
   public int chance() {
-    return stream(dices).sum();
+    return stream(dices).map(Dice::value).reduce(0, Integer::sum);
   }
 
   public int yatzy() {
-    List<Integer> yatzy = diceWithAtLeastTheSameValue(5);
+    List<Dice> yatzy = diceWithAtLeastTheSameValue(5);
     return yatzy.isEmpty() ? 0 : 50;
   }
 
   public int ones() {
-    return sumDiceWithExpectedValue(1);
+    return sumDiceWithExpectedValue(ONE);
   }
 
-  private int sumDiceWithExpectedValue(int diceExpected) {
-    return stream(dices).filter(dice -> dice == diceExpected).sum();
+  private int sumDiceWithExpectedValue(Dice diceExpected) {
+    return stream(dices).filter(dice -> dice == diceExpected).map(Dice::value).reduce(0, Integer::sum);
   }
 
   public int twos() {
-    return sumDiceWithExpectedValue(2);
+    return sumDiceWithExpectedValue(TWO);
   }
 
   public int threes() {
-    return sumDiceWithExpectedValue(3);
+    return sumDiceWithExpectedValue(THREE);
   }
 
   public int fours() {
-    return sumDiceWithExpectedValue(4);
+    return sumDiceWithExpectedValue(FOUR);
   }
 
   public int fives() {
-    return sumDiceWithExpectedValue(5);
+    return sumDiceWithExpectedValue(FIVE);
   }
 
   public int sixes() {
-    return sumDiceWithExpectedValue(6);
+    return sumDiceWithExpectedValue(SIX);
   }
 
   public int score_pair() {
     int numberOfDice = 2;
-    List<Integer> pairs = diceWithAtLeastTheSameValue(numberOfDice);
-    return pairs.stream().max(Comparator.naturalOrder()).map(i -> numberOfDice * i).orElse(0);
+    List<Dice> pairs = diceWithAtLeastTheSameValue(numberOfDice);
+    return pairs.stream().max(Comparator.naturalOrder()).map(dice -> numberOfDice * dice.value()).orElse(0);
   }
 
   public int two_pair() {
-    List<Integer> pairs = diceWithAtLeastTheSameValue(2);
+    List<Dice> pairs = diceWithAtLeastTheSameValue(2);
     if (pairs.size() != 2) {
       return 0;
     } else {
-      return pairs.stream().map(i -> 2 * i).reduce(0, Integer::sum);
+      return pairs.stream().map(dice -> 2 * dice.value()).reduce(0, Integer::sum);
     }
   }
 
   public int four_of_a_kind() {
     int numberOfDice = 4;
-    List<Integer> fourOfAKind = diceWithAtLeastTheSameValue(numberOfDice);
-    return fourOfAKind.stream().findFirst().map(i -> numberOfDice * i).orElse(0);
+    List<Dice> fourOfAKind = diceWithAtLeastTheSameValue(numberOfDice);
+    return fourOfAKind.stream().findFirst().map(dice -> numberOfDice * dice.value()).orElse(0);
   }
 
   public int three_of_a_kind() {
     int numberOfDice = 3;
-    List<Integer> threeOfAKind = diceWithAtLeastTheSameValue(numberOfDice);
-    return threeOfAKind.stream().findFirst().map(i -> numberOfDice * i).orElse(0);
+    List<Dice> threeOfAKind = diceWithAtLeastTheSameValue(numberOfDice);
+    return threeOfAKind.stream().findFirst().map(dice -> numberOfDice * dice.value()).orElse(0);
   }
 
-  private List<Integer> diceWithAtLeastTheSameValue(int numberOfDice) {
-    Map<Integer, Integer> tallies = countNumberOfDicePerValue();
+  private List<Dice> diceWithAtLeastTheSameValue(int numberOfDice) {
+    Map<Dice, Integer> tallies = countNumberOfDicePerValue();
 
     return tallies.entrySet().stream().filter(
         entry -> entry.getValue() >= numberOfDice
@@ -97,22 +104,22 @@ public class Yatzy {
 
   public int smallStraight() {
 
-    Map<Integer, Integer> tallies = countNumberOfDicePerValue();
+    Map<Dice, Integer> tallies = countNumberOfDicePerValue();
 
-    if (tallies.get(1) == 1 &&
-        tallies.get(2) == 1 &&
-        tallies.get(3) == 1 &&
-        tallies.get(4) == 1 &&
-        tallies.get(5) == 1) {
+    if (tallies.get(ONE) == 1 &&
+        tallies.get(TWO) == 1 &&
+        tallies.get(THREE) == 1 &&
+        tallies.get(FOUR) == 1 &&
+        tallies.get(FIVE) == 1) {
       return 15;
     }
     return 0;
   }
 
-  private Map<Integer, Integer> countNumberOfDicePerValue() {
-    HashMap<Integer, Integer> occurrencePerDice = new HashMap<>();
+  private Map<Dice, Integer> countNumberOfDicePerValue() {
+    HashMap<Dice, Integer> occurrencePerDice = new HashMap<>();
 
-    rangeClosed(1, 6).forEach((v -> occurrencePerDice.put(v, 0)));
+    EnumSet.allOf(Dice.class).forEach((v -> occurrencePerDice.put(v, 0)));
     stream(dices).forEach(dice -> occurrencePerDice.merge(dice, 1, Integer::sum));
 
     return occurrencePerDice;
@@ -120,27 +127,27 @@ public class Yatzy {
 
   public int largeStraight() {
 
-    Map<Integer, Integer> tallies = countNumberOfDicePerValue();
+    Map<Dice, Integer> tallies = countNumberOfDicePerValue();
 
-    if (tallies.get(2) == 1 &&
-        tallies.get(3) == 1 &&
-        tallies.get(4) == 1 &&
-        tallies.get(5) == 1
-        && tallies.get(6) == 1) {
+    if (tallies.get(TWO) == 1 &&
+        tallies.get(THREE) == 1 &&
+        tallies.get(FOUR) == 1 &&
+        tallies.get(FIVE) == 1
+        && tallies.get(SIX) == 1) {
       return 20;
     }
     return 0;
   }
 
   public int fullHouse() {
-    List<Integer> pairs = diceWithAtLeastTheSameValue(2);
-    List<Integer> threeOfAKind = diceWithAtLeastTheSameValue(3);
+    List<Dice> pairs = diceWithAtLeastTheSameValue(2);
+    List<Dice> threeOfAKind = diceWithAtLeastTheSameValue(3);
 
     pairs.removeAll(threeOfAKind);
     if (pairs.isEmpty() || threeOfAKind.isEmpty()) {
       return 0;
     } else {
-      return stream(dices).sum();
+      return stream(dices).map(Dice::value).reduce(0, Integer::sum);
     }
   }
 
