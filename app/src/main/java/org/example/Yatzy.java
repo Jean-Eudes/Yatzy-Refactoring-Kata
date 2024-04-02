@@ -28,16 +28,8 @@ public class Yatzy {
   }
 
   public int yatzy() {
-    int[] counts = new int[6];
-    for (int die : dices) {
-      counts[die - 1]++;
-    }
-    for (int i = 0; i != 6; i++) {
-      if (counts[i] == 5) {
-        return 50;
-      }
-    }
-    return 0;
+    List<Integer> yatzy = diceWithAtLeastTheSameValue(5);
+    return yatzy.isEmpty() ? 0 : 50;
   }
 
   public int ones() {
@@ -49,7 +41,6 @@ public class Yatzy {
   }
 
   public int twos() {
-
     return sumDiceWithExpectedValue(2);
   }
 
