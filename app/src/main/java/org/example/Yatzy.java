@@ -2,6 +2,17 @@ package org.example;
 
 public class Yatzy {
 
+  protected int[] dice;
+
+  public Yatzy(int d1, int d2, int d3, int d4, int _5) {
+    dice = new int[5];
+    dice[0] = d1;
+    dice[1] = d2;
+    dice[2] = d3;
+    dice[3] = d4;
+    dice[4] = _5;
+  }
+
   public int chance() {
     int total = 0;
     total += dice[0];
@@ -85,17 +96,6 @@ public class Yatzy {
       s += 3;
     }
     return s;
-  }
-
-  protected int[] dice;
-
-  public Yatzy(int d1, int d2, int d3, int d4, int _5) {
-    dice = new int[5];
-    dice[0] = d1;
-    dice[1] = d2;
-    dice[2] = d3;
-    dice[3] = d4;
-    dice[4] = _5;
   }
 
   public int fours() {
@@ -236,7 +236,7 @@ public class Yatzy {
     return 0;
   }
 
-  public  int fullHouse() {
+  public int fullHouse() {
     int[] tallies;
     boolean _2 = false;
     int i;
