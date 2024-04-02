@@ -3,10 +3,9 @@ package org.example;
 import static java.util.Arrays.stream;
 import static java.util.stream.IntStream.rangeClosed;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.IntStream;
+import java.util.Map.Entry;
 
 public class Yatzy {
 
@@ -107,12 +106,10 @@ public class Yatzy {
 
   public int three_of_a_kind() {
     Map<Integer, Integer> t = countNumberOfDicePerValue();
-    for (int i = 0; i < 6; i++) {
-      if (t.get(i + 1) >= 3) {
-        return (i + 1) * 3;
-      }
-    }
-    return 0;
+
+    return t.entrySet().stream().filter(
+        entry -> entry.getValue() == 3
+    ).map(Entry::getKey).reduce(0, Integer::sum);
   }
 
   public int smallStraight() {
