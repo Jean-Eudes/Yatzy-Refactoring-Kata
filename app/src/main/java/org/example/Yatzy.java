@@ -1,7 +1,6 @@
 package org.example;
 
 import static java.util.Arrays.stream;
-import static java.util.stream.IntStream.rangeClosed;
 import static org.example.Dice.FIVE;
 import static org.example.Dice.FOUR;
 import static org.example.Dice.ONE;
@@ -31,7 +30,7 @@ public class Yatzy {
   }
 
   public int chance() {
-    return stream(dices).map(Dice::value).reduce(0, Integer::sum);
+    return stream(dices).mapToInt(Dice::value).sum();
   }
 
   public int yatzy() {
@@ -44,7 +43,7 @@ public class Yatzy {
   }
 
   private int sumDiceWithExpectedValue(Dice diceExpected) {
-    return stream(dices).filter(dice -> dice == diceExpected).map(Dice::value).reduce(0, Integer::sum);
+    return stream(dices).filter(dice -> dice == diceExpected).mapToInt(Dice::value).sum();
   }
 
   public int twos() {
@@ -78,7 +77,7 @@ public class Yatzy {
     if (pairs.size() != 2) {
       return 0;
     } else {
-      return pairs.stream().map(dice -> 2 * dice.value()).reduce(0, Integer::sum);
+      return pairs.stream().mapToInt(dice -> 2 * dice.value()).sum();
     }
   }
 
@@ -147,7 +146,7 @@ public class Yatzy {
     if (pairs.isEmpty() || threeOfAKind.isEmpty()) {
       return 0;
     } else {
-      return stream(dices).map(Dice::value).reduce(0, Integer::sum);
+      return stream(dices).mapToInt(Dice::value).sum();
     }
   }
 
