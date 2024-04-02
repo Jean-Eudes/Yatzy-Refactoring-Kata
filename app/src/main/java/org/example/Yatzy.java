@@ -9,7 +9,6 @@ import static org.example.Dice.TWO;
 
 import java.util.Comparator;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -28,8 +27,7 @@ public class Yatzy {
   }
 
   public int yatzy() {
-    List<Dice> yatzy = diceWithAtLeastTheSameValue(5);
-    return yatzy.isEmpty() ? 0 : 50;
+    return diceWithAtLeastTheSameValue(5).isEmpty() ? 0 : 50;
   }
 
   public int ones() {
@@ -60,7 +58,7 @@ public class Yatzy {
     int numberOfDice = 2;
     List<Dice> pairs = diceWithAtLeastTheSameValue(numberOfDice);
 
-    // On choisit la plus grande paire si il y a plusieurs paires.
+    // On choisit la plus grande paire si il y a deux.
     return pairs.stream().max(Comparator.naturalOrder()).map(dice -> numberOfDice * dice.value()).orElse(0);
   }
 
@@ -88,7 +86,7 @@ public class Yatzy {
 
   public int smallStraight() {
 
-    Map<Dice, Integer> tallies = countNumberOfDicePerValue();
+    Map<Dice, Long> tallies = countNumberOfDicePerValue();
 
     if (tallies.get(ONE) == 1 &&
         tallies.get(TWO) == 1 &&
@@ -102,7 +100,7 @@ public class Yatzy {
 
   public int largeStraight() {
 
-    Map<Dice, Integer> tallies = countNumberOfDicePerValue();
+    Map<Dice, Long> tallies = countNumberOfDicePerValue();
 
     if (tallies.get(TWO) == 1 &&
         tallies.get(THREE) == 1 &&
@@ -131,17 +129,18 @@ public class Yatzy {
     return dices.stream().filter(dice -> dice == diceExpected).mapToInt(Dice::value).sum();
   }
 
-  private Map<Dice, Integer> countNumberOfDicePerValue() {
-    HashMap<Dice, Integer> occurrencePerDice = new HashMap<>();
+  private Map<Dice, Long> countNumberOfDicePerValue() {
 
-    EnumSet.allOf(Dice.class).forEach((v -> occurrencePerDice.put(v, 0)));
-    dices.forEach(dice -> occurrencePerDice.merge(dice, 1, Integer::sum));
+    Map<Dice, Long> occurrencePerDice = dices.stream()
+        .collect(Collectors.groupingBy(d -> d, Collectors.counting()));
+    // on ajoute les valeurs manquantes avec 0
+    EnumSet.allOf(Dice.class).forEach((dice -> occurrencePerDice.putIfAbsent(dice, 0L)));
 
     return occurrencePerDice;
   }
 
   private List<Dice> diceWithAtLeastTheSameValue(int numberOfDice) {
-    Map<Dice, Integer> tallies = countNumberOfDicePerValue();
+    Map<Dice, Long> tallies = countNumberOfDicePerValue();
 
     return tallies.entrySet().stream().filter(
         entry -> entry.getValue() >= numberOfDice
