@@ -6,6 +6,8 @@ import static java.util.stream.IntStream.rangeClosed;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Yatzy {
 
@@ -105,11 +107,13 @@ public class Yatzy {
   }
 
   public int three_of_a_kind() {
-    Map<Integer, Integer> t = countNumberOfDicePerValue();
+    Map<Integer, Integer> tallies = countNumberOfDicePerValue();
 
-    return t.entrySet().stream().filter(
-        entry -> entry.getValue() == 3
-    ).map(Entry::getKey).reduce(0, Integer::sum);
+    Set<Integer> collect = tallies.entrySet().stream().filter(
+        entry -> entry.getValue() >= 3
+    ).map(Entry::getKey).collect(Collectors.toSet());
+
+    return collect.stream().findFirst().map(i -> 3 * i).orElse(0);
   }
 
   public int smallStraight() {
