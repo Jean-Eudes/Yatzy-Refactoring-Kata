@@ -3,10 +3,11 @@ package org.example;
 import static java.util.Arrays.stream;
 import static java.util.stream.IntStream.rangeClosed;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Yatzy {
@@ -69,51 +70,38 @@ public class Yatzy {
   }
 
   public int score_pair() {
-    Map<Integer, Integer> counts = countNumberOfDicePerValue();
-    int at;
-    for (at = 0; at != 6; at++) {
-      if (counts.get(6 - at) >= 2) {
-        return (6 - at) * 2;
-      }
-    }
-    return 0;
+    int numberOfDice = 2;
+    List<Integer> pairs = diceWithAtLeastTheSameValue(numberOfDice);
+    return pairs.stream().max(Comparator.naturalOrder()).map(i -> numberOfDice * i).orElse(0);
   }
 
   public int two_pair() {
-    Map<Integer, Integer> counts = countNumberOfDicePerValue();
-    int n = 0;
-    int score = 0;
-    for (int i = 0; i < 6; i += 1) {
-      if (counts.get(6 - i) >= 2) {
-        n++;
-        score += (6 - i);
-      }
-    }
-    if (n == 2) {
-      return score * 2;
-    } else {
+    List<Integer> pairs = diceWithAtLeastTheSameValue(2);
+    if (pairs.size() != 2) {
       return 0;
+    } else {
+      return pairs.stream().map(i -> 2 * i).reduce(0, Integer::sum);
     }
   }
 
   public int four_of_a_kind() {
-    Map<Integer, Integer> tallies = countNumberOfDicePerValue();
-    for (int i = 0; i < 6; i++) {
-      if (tallies.get(i + 1) >= 4) {
-        return (i + 1) * 4;
-      }
-    }
-    return 0;
+    int numberOfDice = 4;
+    List<Integer> fourOfAKind = diceWithAtLeastTheSameValue(numberOfDice);
+    return fourOfAKind.stream().findFirst().map(i -> numberOfDice * i).orElse(0);
   }
 
   public int three_of_a_kind() {
+    int numberOfDice = 3;
+    List<Integer> threeOfAKind = diceWithAtLeastTheSameValue(numberOfDice);
+    return threeOfAKind.stream().findFirst().map(i -> numberOfDice * i).orElse(0);
+  }
+
+  private List<Integer> diceWithAtLeastTheSameValue(int numberOfDice) {
     Map<Integer, Integer> tallies = countNumberOfDicePerValue();
 
-    Set<Integer> collect = tallies.entrySet().stream().filter(
-        entry -> entry.getValue() >= 3
-    ).map(Entry::getKey).collect(Collectors.toSet());
-
-    return collect.stream().findFirst().map(i -> 3 * i).orElse(0);
+    return tallies.entrySet().stream().filter(
+        entry -> entry.getValue() >= numberOfDice
+    ).map(Entry::getKey).collect(Collectors.toList());
   }
 
   public int smallStraight() {

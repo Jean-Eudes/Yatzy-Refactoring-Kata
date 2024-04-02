@@ -103,6 +103,7 @@ class YatzyTest {
     assertEquals(20, new Yatzy(6, 2, 3, 4, 5).largeStraight());
     assertEquals(20, new Yatzy(2, 3, 4, 5, 6).largeStraight());
     assertEquals(0, new Yatzy(1, 2, 2, 4, 5).largeStraight());
+    assertEquals(0, new Yatzy(1, 2, 3, 4, 5).largeStraight());
   }
 
   @Test
